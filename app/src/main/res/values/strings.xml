@@ -16,4 +16,5 @@
     <string name="delete_button">Delete</string>
     <string name="drawer_open">Open Navigation Drawer</string>
     <string name="drawer_close">Close Navigation Drawer</string>
+    <string name="newUser">Don not have accont ? Sign Up Here</string>
 </resources>

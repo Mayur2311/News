@@ -4,4 +4,16 @@
     <string name="login_title">Log In</string>
     <string name="enteremail">Please enter email</string>
     <string name="enterpass">Please enter password</string>
+    <string name="hint_confirm_password">Please Re-Enter Password</string>
+    <string name="create_account_label">New Account</string>
+    <string name="create_label"><b>Create</b></string>
+    <string name="hint_phone"><b>Phone Number</b></string>
+    <string name="existing_user">Already have an account? Login Here</string>
+    <string name="txt_forgetpassword"><i><u>Forget Password</u></i></string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_location">Location</string>
+    <string name="delete_button">Delete</string>
+    <string name="drawer_open">Open Navigation Drawer</string>
+    <string name="drawer_close">Close Navigation Drawer</string>
 </resources>

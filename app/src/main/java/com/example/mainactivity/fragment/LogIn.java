@@ -1,6 +1,7 @@
 package com.example.mainactivity.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,8 +22,10 @@ import android.widget.Toast;
 
 import com.example.mainactivity.FirebaseComponents;
 import com.example.mainactivity.R;
+import com.example.mainactivity.dashActivity;
 import com.example.mainactivity.firebasecallbacks.LoginCallBacks;
 import com.example.mainactivity.utils.NetworkCheck;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -58,6 +61,18 @@ public class LogIn extends Fragment {
         return inflater.inflate(R.layout.fragment_log_in, container, false);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null)
+        {
+            updateUI();
+            Toast.makeText(getActivity().getApplicationContext(), "User Already Signin.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -77,34 +92,38 @@ public class LogIn extends Fragment {
 
 
         login_btn.setOnClickListener(v -> {
-            NetworkCheck networkCheck =  new NetworkCheck();
 
+            NetworkCheck networkCheck =  new NetworkCheck();
 
             isFieldEmpty();
 
 
-//          if(networkCheck.checkNetwork(getActivity()))
-//          {
-              String eml = emailTxtView.getText().toString(),
-                      pswd = passwordTxtView.getText().toString();
+            if(networkCheck.checkNetwork(getActivity())) {
+                firebaseComponents.loginUser(emailTxtView.getText().toString(), passwordTxtView.getText().toString(), new LoginCallBacks() {
+                    @Override
+                    public void loginCallBack(boolean loginSuccess) {
 
-                  firebaseComponents.loginUser(eml,pswd, new LoginCallBacks() {
-                      @Override
-                      public void loginCallBack(boolean loginSuccess) {
-                          if (loginSuccess == true) {
-                              firebaseUser = firebaseAuth.getCurrentUser();
-                              updateUI();
-                          } else {
-                              Toast.makeText(getActivity().getApplicationContext(), "Authentication Failed", Toast.LENGTH_SHORT).show();
-                          }
-                      }
-                  });
-
+                        if (loginSuccess == true) {
+                            firebaseUser = firebaseAuth.getCurrentUser();
+                            updateUI();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "Authentication Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }else
+            {
+                Snackbar snackbar = Snackbar.make(view, "No Internet!!!", Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
+            }
         });
-}
+    }
 
     private void updateUI() {
         Toast.makeText(getActivity().getApplicationContext(), "LogInSucess", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), dashActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     public boolean isFieldEmpty() {

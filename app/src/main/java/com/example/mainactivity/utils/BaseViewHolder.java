@@ -9,10 +9,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private int currentPosition;
 
-    private BaseViewHolder(@NonNull View itemView)
-    {
+
+
+    public BaseViewHolder(View itemView) {
         super(itemView);
     }
+
 
     protected abstract void clear();
 

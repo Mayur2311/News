@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mainactivity.R;
+import com.example.mainactivity.models.Datum;
+import com.example.mainactivity.models.NewsList;
 
 import java.util.List;
 
@@ -23,10 +25,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_NORMAL=1;
     private boolean isLoaderVisible = false;
 
-    private List<News> newsList;
+    private List<Datum> newsList;
     private OnRecycleClickListener onRecycleClickListener;
 
-    public MovieRecyclerViewAdapter(List<News> movieList, OnRecycleClickListener onRecycleClickListener) {
+    public RecyclerViewAdapter(List<NewsList> movieList, OnRecycleClickListener onRecycleClickListener) {
         this.newsList = newsList;
         this.onRecycleClickListener = onRecycleClickListener;
     }
@@ -74,16 +76,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         return newsList == null ? 0 : newsList.size();
     }
 
-    public void addItems(List<News> movies)
+    public void addItems(List<Datum> news )
     {
-        newsList.addAll(movies);
+        newsList.addAll(news);
         notifyDataSetChanged();
     }
 
     public void addLoading()
     {
         isLoaderVisible = true;
-        newsList.add(new News());
+        newsList.add(new Datum());
         notifyItemInserted(newsList.size()-1);
     }
 
@@ -91,8 +93,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     {
         isLoaderVisible = false;
         int position = newsList.size()-1;
-        News movie = getItem(position);
-        if (movie!=null)
+        Datum news = getItem(position);
+        if (newsList !=null)
         {
             newsList.remove(position);
             notifyItemRemoved(position);
@@ -105,7 +107,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         notifyDataSetChanged();
     }
 
-    public News getItem(int position)
+    public Datum getItem(int position)
     {
         return newsList.get(position);
     }
@@ -136,6 +138,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         TextView newsCategory;
         @BindView(R.id.publishedAT)
         TextView newsPublishedAt;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -152,16 +155,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onBind(int position) {
             super.onBind(position);
 
-            News news = newsList.get(position);
-            Glide.with(itemView).load(news.getMediumCoverImage()).fitCenter()
+            Datum news = newsList.get(position);
+            Glide.with(itemView).load(news.getImage()).fitCenter()
                     .into(newsImage);
 
-            newsSource.setText(news.getTitleLong());
+            newsSource.setText(news.getAuthor());
+            newsCategory.setText(news.getCategory());
+            newsPublishedAt.setText(news.getPublishedAt());
+
 
         }
     }
 
     public interface OnRecycleClickListener{
-        void onNewsClick(News news);
+        void onNewsClick(Datum news);
     }
 }

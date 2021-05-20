@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +22,22 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class dashboardFragment extends Fragment {
+import butterknife.BindView;
+
+public class dashboardFragment extends Fragment  {
+
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     FirebaseComponents firebaseComponents;
     FirebaseFirestore firestore;
-
     TextView name, email;
+
+    @BindView(R.id.recycleView)
+    RecyclerView recyclerView;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+
 
     public dashboardFragment() {
     }

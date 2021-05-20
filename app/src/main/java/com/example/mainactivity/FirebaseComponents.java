@@ -69,7 +69,7 @@ public class FirebaseComponents {
             {
                 DocumentSnapshot doc = task.getResult();
 
-                Log.d("FirebaseFirestore", doc.getString("Name"));
+//                Log.d("FirebaseFirestore", doc.getString("Name"));
 
                 person = new Person(doc.getString("Email"), doc.getString("First Name"),doc.getString("Last Name"),doc.getString("Phone"), doc.getString("Location"));
 

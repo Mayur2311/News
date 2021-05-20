@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerDashLayout"
+    android:background="@color/grey"
     tools:context=".dashActivity">
 
     <LinearLayout
@@ -18,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/teal_700"
+            app:title="@string/TimesToday"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
 
         <fragment
@@ -37,6 +39,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/header_layout"
+        android:background="@color/grey"
         app:menu="@menu/drawer_menu"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

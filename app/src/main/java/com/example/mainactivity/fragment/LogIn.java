@@ -105,6 +105,7 @@ public class LogIn extends Fragment {
 
                         if (loginSuccess == true) {
                             firebaseUser = firebaseAuth.getCurrentUser();
+                            Toast.makeText(getActivity().getApplicationContext(), "LogInSucess", Toast.LENGTH_SHORT).show();
                             updateUI();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(), "Authentication Failed", Toast.LENGTH_SHORT).show();
@@ -120,7 +121,6 @@ public class LogIn extends Fragment {
     }
 
     private void updateUI() {
-        Toast.makeText(getActivity().getApplicationContext(), "LogInSucess", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), dashActivity.class);
         startActivity(intent);
         getActivity().finish();

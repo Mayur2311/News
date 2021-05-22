@@ -6,7 +6,7 @@
     android:id="@+id/recyleCardView"
     android:layout_margin="5dp"
     app:cardBackgroundColor="@color/primaryLightColor"
-    app:cardCornerRadius="25dp"
+    app:cardCornerRadius="10dp"
     android:padding="10dp">
 
     <RelativeLayout
@@ -72,13 +72,5 @@
             android:textColor="@color/primaryTextColor"
             android:textSize="25sp"
             android:textStyle="bold" />
-
-
     </RelativeLayout>
-
-
-
-
-
-
 </androidx.cardview.widget.CardView>

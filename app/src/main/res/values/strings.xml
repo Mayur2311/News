@@ -17,5 +17,5 @@
     <string name="drawer_open">Open Navigation Drawer</string>
     <string name="drawer_close">Close Navigation Drawer</string>
     <string name="newUser">Don not have accont ? Sign Up Here</string>
-    <string name="TimesToday">Times Today</string>
+    <string name="TimesToday">Profile</string>
 </resources>

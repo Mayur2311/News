@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.mainactivity.Model;
+import com.example.mainactivity.models.Model;
 import com.example.mainactivity.R;
 
 import java.util.ArrayList;
@@ -67,9 +67,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
 
         holder.onBind(position);
-//        holder.itemView.setOnClickListener(v -> {
-//            onRecycleClickListener.onNewsClick(profileList.get(position));
-//        });
+        holder.itemView.setOnClickListener(v -> {
+           onRecycleClickListener.onNewsClick(mDataList.get(position));
+        });
 
     }
 
@@ -77,6 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public int getItemCount() {
         return mDataList == null ? 0 : mDataList.size();
     }
+
 
     public void addItems(ArrayList<Model.MData> data )
     {
@@ -129,7 +130,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    public class ViewHolder extends BaseViewHolder implements View.OnClickListener
+    public class ViewHolder extends BaseViewHolder
     {
 
 
@@ -160,23 +161,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             super.onBind(position);
 
             Model.MData mData = mDataList.get(position);
-            Glide.with(itemView).load(mData.getAvtar()).fitCenter()
+            Glide.with(itemView).load("https://reqres.in/img/faces/1-image.jpg")
                     .into(newsImage);
 
-            newsSource.setText(mData.getId());
-            newsCategory.setText(mData.getFirst_name());
+            newsSource.setText("ID: "+mData.getId());
+            newsCategory.setText(mData.getFirst_name()+" "+mData.getLast_name());
             newsPublishedAt.setText(mData.getEmail());
 
-
         }
 
-        @Override
-        public void onClick(View v) {
-                onRecycleClickListener.onNewsClick(getAdapterPosition());
-        }
+
+
+//        @Override
+//        public void onClick(View v) {
+//                onRecycleClickListener.onNewsClick(getAdapterPosition());
+//        }
     }
 
  public interface OnRecycleClickListener{
-        void onNewsClick(int position);
+        void onNewsClick(Model.MData position);
     }
 }

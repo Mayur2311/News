@@ -10,10 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.mainactivity.Model;
 import com.example.mainactivity.R;
-import com.example.mainactivity.models.Datum;
-import com.example.mainactivity.models.NewsList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,13 +25,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_NORMAL=1;
     private boolean isLoaderVisible = false;
 
-    private List<Datum> newsList;
+    private List<Model> modelList;
+    private List<Model.MData> mDataList;
     private OnRecycleClickListener onRecycleClickListener;
 
-    public RecyclerViewAdapter(List<NewsList> movieList, OnRecycleClickListener onRecycleClickListener) {
-        this.newsList = newsList;
+    public RecyclerViewAdapter(List<Model.MData> mDataList, OnRecycleClickListener onRecycleClickListener) {
+        this.mDataList = mDataList;
         this.onRecycleClickListener = onRecycleClickListener;
     }
+
 
     @NonNull
     @Override
@@ -55,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         if (isLoaderVisible)
         {
-            return position == newsList.size() -1 ? VIEW_TYPE_LOADING : VIEW_TYPE_NORMAL;
+            return position == mDataList.size() -1 ? VIEW_TYPE_LOADING : VIEW_TYPE_NORMAL;
         }else {
             return VIEW_TYPE_NORMAL;
         }
@@ -65,51 +67,52 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
 
         holder.onBind(position);
-        holder.itemView.setOnClickListener(v -> {
-            onRecycleClickListener.onNewsClick(newsList.get(position));
-        });
+//        holder.itemView.setOnClickListener(v -> {
+//            onRecycleClickListener.onNewsClick(profileList.get(position));
+//        });
 
     }
 
     @Override
     public int getItemCount() {
-        return newsList == null ? 0 : newsList.size();
+        return mDataList == null ? 0 : mDataList.size();
     }
 
-    public void addItems(List<Datum> news )
+    public void addItems(ArrayList<Model.MData> data )
     {
-        newsList.addAll(news);
+        mDataList.addAll(data);
         notifyDataSetChanged();
     }
 
     public void addLoading()
     {
+        Model.MData modelMdata = new Model.MData();
         isLoaderVisible = true;
-        newsList.add(new Datum());
-        notifyItemInserted(newsList.size()-1);
+        mDataList.add(modelMdata);
+        notifyItemInserted(mDataList.size()-1);
     }
 
     public void removeLoading()
     {
         isLoaderVisible = false;
-        int position = newsList.size()-1;
-        Datum news = getItem(position);
-        if (newsList !=null)
+        int position = mDataList.size()-1;
+        Model.MData mData = getItem(position);
+        if (mDataList !=null)
         {
-            newsList.remove(position);
+            mDataList.remove(position);
             notifyItemRemoved(position);
         }
     }
 
     public void clear()
     {
-        newsList.clear();
+        mDataList.clear();
         notifyDataSetChanged();
     }
 
-    public Datum getItem(int position)
+    public Model.MData getItem(int position)
     {
-        return newsList.get(position);
+        return mDataList.get(position);
     }
 
     public class ProgressHolder extends BaseViewHolder
@@ -126,7 +129,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    public class ViewHolder extends BaseViewHolder
+    public class ViewHolder extends BaseViewHolder implements View.OnClickListener
     {
 
 
@@ -138,6 +141,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         TextView newsCategory;
         @BindView(R.id.publishedAT)
         TextView newsPublishedAt;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -155,19 +159,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onBind(int position) {
             super.onBind(position);
 
-            Datum news = newsList.get(position);
-            Glide.with(itemView).load(news.getImage()).fitCenter()
+            Model.MData mData = mDataList.get(position);
+            Glide.with(itemView).load(mData.getAvtar()).fitCenter()
                     .into(newsImage);
 
-            newsSource.setText(news.getAuthor());
-            newsCategory.setText(news.getCategory());
-            newsPublishedAt.setText(news.getPublishedAt());
+            newsSource.setText(mData.getId());
+            newsCategory.setText(mData.getFirst_name());
+            newsPublishedAt.setText(mData.getEmail());
 
 
         }
+
+        @Override
+        public void onClick(View v) {
+                onRecycleClickListener.onNewsClick(getAdapterPosition());
+        }
     }
 
-    public interface OnRecycleClickListener{
-        void onNewsClick(Datum news);
+ public interface OnRecycleClickListener{
+        void onNewsClick(int position);
     }
 }

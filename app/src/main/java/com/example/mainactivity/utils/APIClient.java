@@ -17,7 +17,7 @@ public class APIClient {
                 .addInterceptor(interceptor).build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.mediastack.com/v1/")
+                .baseUrl("https://reqres.in/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

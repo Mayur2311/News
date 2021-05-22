@@ -17,14 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mainactivity.FirebaseComponents;
+import com.example.mainactivity.Model;
 import com.example.mainactivity.R;
 import com.example.mainactivity.firebasecallbacks.ReadCallBacks;
-import com.example.mainactivity.models.Datum;
-import com.example.mainactivity.models.NewsList;
-import com.example.mainactivity.models.Pagination;
 import com.example.mainactivity.models.Person;
 import com.example.mainactivity.utils.APIClient;
 import com.example.mainactivity.utils.APIinterface;
+import com.example.mainactivity.utils.BaseViewHolder;
 import com.example.mainactivity.utils.PaginationListener;
 import com.example.mainactivity.utils.RecyclerViewAdapter;
 import com.google.android.material.navigation.NavigationView;
@@ -33,13 +32,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
 import static com.example.mainactivity.utils.PaginationListener.PAGE_START;
 
 public class dashboardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, RecyclerViewAdapter.OnRecycleClickListener {
@@ -60,9 +59,13 @@ public class dashboardFragment extends Fragment implements SwipeRefreshLayout.On
     private boolean isLastPage = false;
     private int totalPage = 50;
     private boolean isLoading = false;
-    List<Datum> myNewsList;
+    ArrayList<Model.MData> data;
+    ArrayList<Model> myProfileList;
 
     APIinterface apiInterface;
+
+    public static void main(String[] args) {
+    }
 
 
     public dashboardFragment() {
@@ -141,48 +144,83 @@ public class dashboardFragment extends Fragment implements SwipeRefreshLayout.On
         });
     }
 
-    public void makeApiCall() {
-        apiInterface = APIClient.getClient().create(APIinterface.class);
+        public void makeApiCall()
+        {
+             apiInterface =  APIClient.getClient().create(APIinterface.class);
+             Call<Model> call =  apiInterface.getProfileData();
 
-        Call<Datum> call = apiInterface.getListByYear("access_key");
-        call.enqueue(new Callback<Datum>() {
+            call.enqueue(new Callback<Model>() {
+                @Override
+                public void onResponse(Call<Model> call, Response<Model> response) {
+                    Log.d("Dashboard Fragment", "" + response.code());
+                    response.body().getData();
 
-            @Override
-            public void onResponse(Call<Datum> call, Response<Datum> response) {
-                Log.d("Dashboard Fragment", "" + response.body());
+                    data = (ArrayList<Model.MData>) response.body().getData();
+                    for (Model.MData data1 : data )
+                    {
+                        Log.e(TAG,"onResponse: emails : "+data1.getEmail());
+                    }
 
-                NewsList newsList = response.body();
-                Pagination data = newsList.pagination;
-                List<Datum> movies = data.news;
-                myNewsList = movies;
+                    if (currentPage != PAGE_START) adapter.removeLoading();
 
-                Log.d("Dashboard Fragment", "Movie Size" + movies.size());
-                Log.d("Dashboard Fragment", "First Movie" + movies.get(0).title);
+                    adapter.addItems(data);
+                    swipeRefreshLayout.setRefreshing(false);
 
-
-                if (currentPage != PAGE_START) adapter.removeLoading();
-
-                adapter.addItems(movies);
-                swipeRefreshLayout.setRefreshing(false);
-
-                if (currentPage < totalPage) {
-                    adapter.addLoading();
-                } else {
-                    isLastPage = true;
+                    if (currentPage < totalPage) {
+                      adapter.addLoading();
+                    } else {
+                        isLastPage = true;
+                    }
+                    isLoading = false;
                 }
-                isLoading = false;
 
-            }
+                @Override
+                public void onFailure(Call<Model> call, Throwable t) {
+                    Log.e(TAG,"onResponse: emails : "+t.getMessage());
+                }
+            });
 
-
-            @Override
-            public void onFailure(Call<Datum> call, Throwable t) {
-                call.cancel();
-                Log.d("Dashboard Fragment", "" + t.getMessage());
-            }
-        });
-    }
-
+        }
+//    public void makeApiCall() {
+//        apiInterface = APIClient.getClient().create(APIinterface.class);
+//
+//        Call<ProfileList> call = apiInterface.getProfileData(String.valueOf(currentPage));
+//        call.enqueue(new Callback<ProfileList>() {
+//
+//            @Override
+//            public void onResponse(Call<ProfileList> call, Response<ProfileList> response) {
+//                Log.d("Dashboard Fragment", "" + response.body());
+//
+//                ProfileList profileList = response.body();
+//                Datum datum = profileList.data;
+//               List<Profile> profile = datum.profiles;
+ //                 myProfileList = profile;
+//
+//                Log.d("Dashboard Fragment", "Profile Size" + profile.size());
+//                Log.d("Dashboard Fragment", "First Movie" + profile.get(0).firstName);
+//
+//
+//                if (currentPage != PAGE_START) adapter.removeLoading();
+//
+//                adapter.addItems(profile);
+//                swipeRefreshLayout.setRefreshing(false);
+//
+//                if (currentPage < totalPage) {
+//                    adapter.addLoading();
+//                } else {
+//                    isLastPage = true;
+//                }
+//                isLoading = false;
+//            }
+//
+//
+//            @Override
+//            public void onFailure(Call<ProfileList> call, Throwable t) {
+//                call.cancel();
+//                Log.d("Dashboard Fragment", ""+t.getMessage());
+//            }
+//        });
+//    }
 
     @Override
     public void onRefresh() {
@@ -190,12 +228,14 @@ public class dashboardFragment extends Fragment implements SwipeRefreshLayout.On
         isLastPage = false;
         adapter.clear();
         makeApiCall();
-
     }
 
     @Override
-    public void onNewsClick(Datum news) {
-        Toast.makeText(getActivity().getApplicationContext(), news.getTitle(), Toast.LENGTH_SHORT).show();
-    }
-}
+    public void onNewsClick(int position) {
 
+        Model.MData mData = data.get(position);
+        Toast.makeText(getContext().getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+    }
+
+
+}

@@ -10,4 +10,9 @@
         android:name="com.example.mainactivity.fragment.dashboardFragment"
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.mainactivity.detailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
 </navigation>

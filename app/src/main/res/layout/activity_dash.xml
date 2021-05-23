@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/teal_700"
-            app:title="@string/TimesToday"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:title="@string/TimesToday" />
 
         <fragment
             android:layout_width="match_parent"
